@@ -1,4 +1,5 @@
 import { ComBaseElement } from "./base.js";
+import { ComChainElement } from "./chain.js";
 
 const comModuleTemplate = document.createElement("template");
 comModuleTemplate.innerHTML = `
@@ -9,134 +10,170 @@ comModuleTemplate.innerHTML = `
  * @template {OperatorTypes} OperatorType
  */
 export class ComModuleElement extends ComBaseElement {
-    constructor() {
-        super();
-        // console.log("module constructing: START");
+  constructor() {
+    super();
+    console.log("module constructing: START");
 
-        this.shadowRoot.append(comModuleTemplate.content.cloneNode(true));
+    this.shadowRoot.append(comModuleTemplate.content.cloneNode(true));
 
-        // console.log("module constructing: END");
+    let typeAttr = this.getAttribute("type");
+    if (typeAttr) {
+      this.setOperatorType(typeAttr);
     }
 
-    #deferedType = false;
+    let parametersAttr = this.getAttribute("parameters");
+    let parameters = parametersAttr?.split(",").map((s) => +s);
+    if (parameters?.length) {
+      this.setOperatorParameters(parameters);
+    }
 
-    /**@type {OperatorSufix} */
-    #type = "pth";
+    if (this.hasAttribute("signal")) {
+      this.signal("insert");
+    }
 
-    /**@type {OperatorTypes} */
-    #operator = null;
+    console.log("module constructing: END");
+  }
 
-    /**
-     * @template {OperatorSufix} T
-     * @param {T} type
-     * @returns {ComModuleElement<OperatorElementTagNameMap[`com-op-${T}`]>}
-     */
-    setOperatorType(type) {
-        if (!this.isConnected) {
-            // console.log("setOperatorType: DEFER");
-            this.#type = type;
-            this.#deferedType = true;
-            return this;
-        }
+  #deferedType = false;
 
-        this.#type = type;
-        this.#deferedType = false;
+  /**@type {OperatorSufix} */
+  #type = "pth";
 
-        // console.log("\tsetOperatorType: START");
+  /**@type {OperatorTypes} */
+  #operator = null;
 
-        const operator = document.createElement(`com-op-${type}`);
-        this.#operator = operator;
+  /**
+   * @template {OperatorSufix} T
+   * @param {T} type
+   * @returns {ComModuleElement<OperatorElementTagNameMap[`com-op-${T}`]>}
+   */
+  setOperatorType(type) {
+    if (!this.isConnected) {
+      // console.log("setOperatorType: DEFER");
+      this.#type = type;
+      this.#deferedType = true;
+      return this;
+    }
 
-        this.appendChild(operator);
+    this.#type = type;
+    this.#deferedType = false;
 
-        // console.log("\tsetOperatorType: END");
+    // console.log("\tsetOperatorType: START");
 
+    const operator = document.createElement(`com-op-${type}`);
+    this.#operator = operator;
+
+    this.appendChild(operator);
+
+    // console.log("\tsetOperatorType: END");
+
+    return this;
+  }
+
+  /**@type {number[]} */
+  #deferedParameterValues = [];
+
+  /**@param {OperatorType['inputs']} values */
+  setOperatorParameters(values) {
+    if (!this.#operator) {
+      this.#deferedParameterValues = values;
+      return this;
+    }
+
+    this.#deferedParameterValues = [];
+
+    // console.log("\t\t\tsetOperatorParameters: START");
+
+    this.#operator.inputs = values;
+
+    // console.log("\t\t\tsetOperatorParameters: END");
+
+    return this;
+  }
+
+  /**@type {"insert" | "append" | "remove"} */
+  #deferedSignal = null;
+
+  get latentSignal() {
+    switch (this.#deferedSignal) {
+      case "append":
+      case "insert":
+      case "remove":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  #connectedToIntercom = false;
+
+  /**@param {"insert" | "append" | "remove"} type */
+  signal(type) {
+    if (!this.#connectedToIntercom && type == "remove") {
+      return this;
+    }
+    if (!this.#operator) {
+      this.#deferedSignal = type;
+      return this;
+    }
+    if (!this.#chain.isConnectedToIntercom) {
+      this.#deferedSignal = type;
+      return this;
+    }
+
+    this.#deferedSignal = null;
+
+    let signalString = "";
+
+    switch (type) {
+      case "append":
+        signalString = `module -c ${0} -a ${0} ${this.#type}`;
+        this.#connectedToIntercom = true;
+        break;
+      case "insert":
+        signalString = `module -c ${0} -i ${0} ${this.#type} ${
+          this.#operator.inputs
+        }`;
+        this.#connectedToIntercom = true;
+        break;
+      case "remove":
+        signalString = `module -c ${0} -r ${0}`;
+        this.#connectedToIntercom = false;
+        break;
+      default:
         return this;
     }
 
-    /**@type {number[]} */
-    #deferedParameterValues = [];
+    console.log(signalString);
 
-    /**@param {OperatorType['inputs']} values */
-    setOperatorParameters(values) {
-        if (!this.#operator) {
-            this.#deferedParameterValues = values;
-            return this;
-        }
+    return this;
+  }
 
-        this.#deferedParameterValues = [];
+  /**@type {ComChainElement} */
+  #chain = null;
 
-        // console.log("\t\t\tsetOperatorParameters: START");
+  connectedCallback() {
+    console.log("module connected: START");
 
-        this.#operator.inputs = values;
+    // const operator = document.createElement("com-op-lfo");
+    // this.appendChild(operator);
 
-        // console.log("\t\t\tsetOperatorParameters: END");
+    const parentChain = this.closest("com-chain");
+    this.#chain = parentChain;
 
-        return this;
+    if (this.#deferedType) {
+      this.setOperatorType(this.#type);
+    }
+    if (this.#deferedParameterValues.length) {
+      this.setOperatorParameters(this.#deferedParameterValues);
+    }
+    if (this.#deferedSignal) {
+      this.signal(this.#deferedSignal);
     }
 
-    /**@type {"insert" | "append" | "remove"} */
-    #deferedSignal = null;
+    // operator.inputs.forEach((inp) => console.log(inp.value));
 
-    #connectedToIntercom = false;
-
-    /**@param {"insert" | "append" | "remove"} type */
-    signal(type) {
-        if (!this.#connectedToIntercom && type == "remove") {
-            return this;
-        }
-        if (!this.#operator) {
-            this.#deferedSignal = type;
-            return this;
-        }
-
-        this.#deferedSignal = null;
-
-        let signalString = "";
-
-        switch (type) {
-            case "append":
-                signalString = `module -c ${0} -a ${0} ${this.#type}`;
-                this.#connectedToIntercom = true;
-                break;
-            case "insert":
-                signalString = `module -c ${0} -i ${0} ${this.#type} ${
-                    this.#operator.inputs
-                }`;
-                this.#connectedToIntercom = true;
-                break;
-            case "remove":
-                signalString = `module -c ${0} -r ${0}`;
-                this.#connectedToIntercom = false;
-                break;
-            default:
-                return this;
-        }
-
-        console.log(signalString);
-
-        return this;
-    }
-
-    connectedCallback() {
-        // console.log("module connected: START");
-
-        // const operator = document.createElement("com-op-lfo");
-        // this.appendChild(operator);
-
-        if (this.#deferedType) {
-            this.setOperatorType(this.#type);
-        }
-        if (this.#deferedParameterValues.length) {
-            this.setOperatorParameters(this.#deferedParameterValues);
-        }
-        if (this.#deferedSignal) {
-            this.signal(this.#deferedSignal);
-        }
-
-        // operator.inputs.forEach((inp) => console.log(inp.value));
-
-        // console.log("module connected: END");
-    }
-    disconnectedCallback() {}
+    console.log("module connected: END");
+  }
+  disconnectedCallback() {}
 }

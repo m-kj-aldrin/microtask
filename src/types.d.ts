@@ -42,15 +42,15 @@ declare global {
             OperatorElementTagNameMap,
             InputElementTagNameMap {}
 
-    interface ExtendedSelector {
-        [key: `com-chain:nth-child(${string})`]: ComChainElement;
-        [
-            key: `com-chain:nth-child(${string}) com-module:nth-child(${string})`
-        ]: ComModuleElement<PthOperatorElement>;
-        [
-            key: `com-chain:nth-child(${string}) com-module:nth-child(${string}) input-number:nth-child(${string})`
-        ]: InputNumberElement;
-    }
+    // interface ExtendedSelector {
+    //     [key: `com-chain:nth-child(${string})`]: ComChainElement;
+    //     [
+    //         key: `com-chain:nth-child(${string}) com-module:nth-child(${string})`
+    //     ]: ComModuleElement<PthOperatorElement>;
+    //     [
+    //         key: `com-chain:nth-child(${string}) com-module:nth-child(${string}) input-number:nth-child(${string})`
+    //     ]: InputNumberElement;
+    // }
 
     interface ParentNode {
         querySelector(
