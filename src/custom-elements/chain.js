@@ -6,14 +6,25 @@ comChainTemplate.innerHTML = `
 `;
 
 export class ComChainElement extends ComBaseElement {
+  get parentType() {
+    return "";
+  }
+  get childType() {
+    return "module";
+  }
+
+  get parent() {
+    return this.closest("com-network");
+  }
+
   constructor() {
     super();
 
-    console.log("chain constructing: START");
+    // console.log("chain constructing: START");
 
     this.shadowRoot.append(comChainTemplate.content.cloneNode(true));
 
-    console.log("chain constructing: END");
+    // console.log("chain constructing: END");
   }
 
   #connectedToIntercom = false;
@@ -68,11 +79,11 @@ export class ComChainElement extends ComBaseElement {
   }
 
   connectedCallback() {
-    console.log("chain connected: START");
+    // console.log("chain connected: START");
     if (this.#deferedSignal) {
       this.signal(this.#deferedSignal);
     }
-    console.log("chain connected: END");
+    // console.log("chain connected: END");
   }
   disconnectedCallback() {}
 }

@@ -10,13 +10,29 @@ comModuleTemplate.innerHTML = `
  * @template {OperatorTypes} OperatorType
  */
 export class ComModuleElement extends ComBaseElement {
+  get parentType() {
+    return "chain";
+  }
+
+  get parent() {
+    return this.closest("com-chain");
+  }
+
+  /**@type {OperatorSufix[]} */
+  #validOperatorTypes = ["pth", "lfo"];
+
+  /**@param {string} typeString */
+  #validType(typeString) {
+    return this.#validOperatorTypes.find((s) => s == typeString) ?? false;
+  }
+
   constructor() {
     super();
-    console.log("module constructing: START");
+    // console.log("module constructing: START");
 
     this.shadowRoot.append(comModuleTemplate.content.cloneNode(true));
 
-    let typeAttr = this.getAttribute("type");
+    let typeAttr = this.#validType(this.getAttribute("type"));
     if (typeAttr) {
       this.setOperatorType(typeAttr);
     }
@@ -31,7 +47,7 @@ export class ComModuleElement extends ComBaseElement {
       this.signal("insert");
     }
 
-    console.log("module constructing: END");
+    // console.log("module constructing: END");
   }
 
   #deferedType = false;
@@ -128,13 +144,17 @@ export class ComModuleElement extends ComBaseElement {
 
     let signalString = "";
 
+    console.log(this.parent.index);
+    let cidx = this.parent.index;
+    let midx = this.index;
+
     switch (type) {
       case "append":
-        signalString = `module -c ${0} -a ${0} ${this.#type}`;
+        signalString = `module -c ${cidx} -a ${midx} ${this.#type}`;
         this.#connectedToIntercom = true;
         break;
       case "insert":
-        signalString = `module -c ${0} -i ${0} ${this.#type} ${
+        signalString = `module -c ${cidx} -i ${midx} ${this.#type} ${
           this.#operator.parameters
         }`;
         this.#connectedToIntercom = true;
@@ -156,7 +176,7 @@ export class ComModuleElement extends ComBaseElement {
   #chain = null;
 
   connectedCallback() {
-    console.log("module connected: START");
+    // console.log("module connected: START");
 
     // const operator = document.createElement("com-op-lfo");
     // this.appendChild(operator);
@@ -176,7 +196,7 @@ export class ComModuleElement extends ComBaseElement {
 
     // operator.inputs.forEach((inp) => console.log(inp.value));
 
-    console.log("module connected: END");
+    // console.log("module connected: END");
   }
   disconnectedCallback() {}
 }

@@ -6,12 +6,15 @@ inputNumberTemplate.innerHTML = `
 `;
 
 export class InputNumberElement extends InputBaseElement {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.shadowRoot.append(inputNumberTemplate.content.cloneNode(true));
-    }
+    this.shadowRoot.append(inputNumberTemplate.content.cloneNode(true));
 
-    // connectedCallback() {}
-    // disconnectedCallback() {}
+    let valueAttr = this.getAttribute("value");
+    this.value = +valueAttr;
+  }
+
+  // connectedCallback() {}
+  // disconnectedCallback() {}
 }

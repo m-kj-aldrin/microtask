@@ -13,11 +13,13 @@ const module01 = document
   .setOperatorType("lfo")
   .signal("insert");
 
-chain0.append(module00, module01);
+document.body.append(network);
 
 network.append(chain0);
 
-document.body.append(network);
+chain0.append(module00, module01);
+
+
 
 chain0.signal("new");
 
@@ -27,9 +29,6 @@ setTimeout(() => {
     .querySelector("com-module:nth-child(2)")
     .setOperatorParameters([0, , 0], true);
 }, 1000);
-// let chain0Modules = document.querySelectorAll(
-//   `com-chain:nth-child(${1}) com-module`
-// );
 
 // chain0Modules.forEach((module) => {
 //   console.log(module);

@@ -9,12 +9,12 @@ export class InputBaseElement extends HTMLElement {
 
     // console.log("input constructing: START");
 
-    let valueAttr = this.getAttribute("value");
-    this.#value = +valueAttr;
-
     this.attachShadow({ mode: "open" });
 
     this.shadowRoot.append(inputBaseTemplate.content.cloneNode(true));
+
+    // let valueAttr = this.getAttribute("value");
+    // this.value = +valueAttr;
 
     this.#setupListeners();
     // console.log("input constructing: END");
@@ -32,10 +32,16 @@ export class InputBaseElement extends HTMLElement {
   }
   set value(value) {
     this.#value = value;
+    this.shadowRoot.querySelector("input").value = value;
   }
 
   connectedCallback() {
     // console.log("input connected: START");
+    // if (this.hasAttribute("value")) {
+    //   let valueAttr = this.getAttribute("value");
+    //   this.value = +valueAttr;
+    //   this.removeAttribute("value");
+    // }
     // console.log("input connected: END");
   }
   disconnectedCallback() {}

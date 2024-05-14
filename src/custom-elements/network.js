@@ -6,8 +6,13 @@ comNetworkTemplate.innerHTML = `
 `;
 
 export class ComNetworkElement extends ComBaseElement {
+    get childType(){
+        return "chain"
+    }
     constructor() {
         super();
+
+        
 
         // console.log("network constructing: START");
 
