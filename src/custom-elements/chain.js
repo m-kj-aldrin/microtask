@@ -6,9 +6,6 @@ comChainTemplate.innerHTML = `
 `;
 
 export class ComChainElement extends ComBaseElement {
-  get parentType() {
-    return "";
-  }
   get childType() {
     return "module";
   }

@@ -10,10 +10,6 @@ comModuleTemplate.innerHTML = `
  * @template {OperatorTypes} OperatorType
  */
 export class ComModuleElement extends ComBaseElement {
-  get parentType() {
-    return "chain";
-  }
-
   get parent() {
     return this.closest("com-chain");
   }
