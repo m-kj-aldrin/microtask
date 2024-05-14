@@ -1,7 +1,6 @@
 const network = document.createElement("com-network");
 
-const chain0 = document.createElement("com-chain")
-chain0.signal("new")
+const chain0 = document.createElement("com-chain");
 
 const module00 = document
   .createElement("com-module")
@@ -20,9 +19,14 @@ network.append(chain0);
 
 document.body.append(network);
 
+chain0.signal("new");
 
-
-
+setTimeout(() => {
+  console.log("\n");
+  chain0
+    .querySelector("com-module:nth-child(2)")
+    .setOperatorParameters([0, , 0], true);
+}, 1000);
 // let chain0Modules = document.querySelectorAll(
 //   `com-chain:nth-child(${1}) com-module`
 // );
@@ -59,7 +63,6 @@ addMdlBtn.addEventListener("click", (e) => {
 
   const firstChain = document.querySelector("com-chain:nth-child(1)");
   firstChain.appendChild(newModule);
-
 });
 
 document.body.append(addMdlBtn);

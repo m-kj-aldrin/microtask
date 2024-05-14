@@ -73,8 +73,8 @@ export class ComModuleElement extends ComBaseElement {
   /**@type {number[]} */
   #deferedParameterValues = [];
 
-  /**@param {OperatorType['inputs']} values */
-  setOperatorParameters(values) {
+  /**@param {OperatorType['parameters']} values */
+  setOperatorParameters(values, signalParameters = false) {
     if (!this.#operator) {
       this.#deferedParameterValues = values;
       return this;
@@ -84,8 +84,11 @@ export class ComModuleElement extends ComBaseElement {
 
     // console.log("\t\t\tsetOperatorParameters: START");
 
-    this.#operator.inputs = values;
+    this.#operator.parameters = values;
 
+    if (signalParameters) {
+      this.#operator.signalAll();
+    }
     // console.log("\t\t\tsetOperatorParameters: END");
 
     return this;
@@ -132,7 +135,7 @@ export class ComModuleElement extends ComBaseElement {
         break;
       case "insert":
         signalString = `module -c ${0} -i ${0} ${this.#type} ${
-          this.#operator.inputs
+          this.#operator.parameters
         }`;
         this.#connectedToIntercom = true;
         break;
