@@ -2,6 +2,7 @@ import { OperatorBaseElement } from "./base.js";
 
 const lfoOperatorTemplate = document.createElement("template");
 lfoOperatorTemplate.innerHTML = `
+<div>lfo</div>
 <input-number order="0" value="20"></input-number>
 <input-number order="1" value="123"></input-number>
 <input-number order="2" value="500"></input-number>

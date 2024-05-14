@@ -8,6 +8,39 @@
         <script type="module" src="/src/custom-elements/index.js"></script>
 
         <script type="module" src="app.js"></script>
+
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                box-sizing: border-box;
+
+                margin: 0;
+                padding: 4px;
+
+                display: grid;
+                grid-template-columns: 1fr;
+
+                font-family: monospace;
+            }
+
+            com-network,
+            com-chain,
+            com-module {
+                display: flex;
+                gap: 8px;
+
+                border: 1px currentColor solid;
+                padding: 2px;
+            }
+            com-chain,
+            com-module {
+                flex-direction: column;
+            }
+        </style>
     </head>
     <body></body>
 </html>

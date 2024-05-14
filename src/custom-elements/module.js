@@ -8,12 +8,9 @@ comModuleTemplate.innerHTML = `
 
 /**
  * @template {OperatorTypes} OperatorType
+ * @extends ComBaseElement<"com-chain",null>
  */
 export class ComModuleElement extends ComBaseElement {
-    get parent() {
-        return this.closest("com-chain");
-    }
-
     /**@type {OperatorSufix[]} */
     #validOperatorTypes = ["pth", "lfo"];
 
@@ -23,7 +20,8 @@ export class ComModuleElement extends ComBaseElement {
     }
 
     constructor() {
-        super();
+        super("com-chain", null);
+
         // console.log("module constructing: START");
 
         this.shadowRoot.append(comModuleTemplate.content.cloneNode(true));
@@ -140,7 +138,6 @@ export class ComModuleElement extends ComBaseElement {
 
         let signalString = "";
 
-        console.log(this.parent.index);
         let cidx = this.parent.index;
         let midx = this.index;
 
@@ -156,7 +153,7 @@ export class ComModuleElement extends ComBaseElement {
                 this.#connectedToIntercom = true;
                 break;
             case "remove":
-                signalString = `module -c ${0} -r ${0}`;
+                signalString = `module -c ${cidx} -r ${midx}`;
                 this.#connectedToIntercom = false;
                 break;
             default:

@@ -1,47 +1,58 @@
 const comBaseTemplate = document.createElement("template");
 comBaseTemplate.innerHTML = ``;
 
+/**
+ * @template {"com-network" | "com-chain" | "com-module"} ParentType
+ * @template {"com-network" | "com-chain" | "com-module"} ChildType
+ */
 export class ComBaseElement extends HTMLElement {
-  get childType() {
-    return "";
-  }
-  get parentType() {
-    return "";
-  }
+    /**@type {ParentType} */
+    #parentType = null;
 
-  /**@type {ComBaseElement} */
-  get parent() {
-    return null;
-  }
-  // get parent() {
-  //   // console.log(this.parentType);
-  //   // return this.closest(`com-${this.parentType}`);
-  // }
-
-  get index() {
-    let parent = this.parent;
-    // console.log(parent,this);
-    if (parent) {
-      let siblings = parent.querySelectorAll(`com-${parent.childType}`);
-      let i = 0;
-      for (const sibling of siblings) {
-        if (sibling == this) {
-          return i;
-        }
-        i++;
-      }
+    get parent() {
+        return this.closest(this.#parentType);
     }
-    return -1;
-  }
 
-  constructor() {
-    super();
+    get descendants() {
+        return this.querySelectorAll(this.#childType);
+    }
 
-    this.attachShadow({ mode: "open" });
+    /**@type {ChildType} */
+    #childType = null;
+    get childType() {
+        return this.#childType;
+    }
 
-    this.shadowRoot.append(comBaseTemplate.content.cloneNode(true));
-  }
+    get index() {
+        let parent = this.parent;
+        if (parent) {
+            let siblings = parent.querySelectorAll(parent.childType);
+            let i = 0;
+            for (const sibling of siblings) {
+                if (sibling == this) {
+                    return i;
+                }
+                i++;
+            }
+        }
+        return -1;
+    }
 
-  connectedCallback() {}
-  disconnectedCallback() {}
+    /**
+     * @param {ParentType} parentType
+     * @param {ChildType} childType
+     */
+    constructor(parentType, childType) {
+        super();
+
+        this.#parentType = parentType;
+        this.#childType = childType;
+
+        this.attachShadow({ mode: "open" });
+
+        this.shadowRoot.append(comBaseTemplate.content.cloneNode(true));
+    }
+
+    connectedCallback() {}
+    disconnectedCallback() {}
 }
