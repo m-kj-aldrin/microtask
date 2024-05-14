@@ -24,6 +24,10 @@ export class ComChainElement extends ComBaseElement {
 
     this.shadowRoot.append(comChainTemplate.content.cloneNode(true));
 
+    if (this.hasAttribute("signal")) {
+      this.signal("new");
+    }
+
     // console.log("chain constructing: END");
   }
 

@@ -23,7 +23,7 @@ export class ComModuleElement extends ComBaseElement {
 
   /**@param {string} typeString */
   #validType(typeString) {
-    return this.#validOperatorTypes.find((s) => s == typeString) ?? false;
+    return this.#validOperatorTypes.find((s) => s == typeString) ?? "pth";
   }
 
   constructor() {
@@ -33,12 +33,12 @@ export class ComModuleElement extends ComBaseElement {
     this.shadowRoot.append(comModuleTemplate.content.cloneNode(true));
 
     let typeAttr = this.#validType(this.getAttribute("type"));
-    if (typeAttr) {
-      this.setOperatorType(typeAttr);
-    }
+    this.setOperatorType(typeAttr);
 
     let parametersAttr = this.getAttribute("parameters");
-    let parameters = parametersAttr?.split(",").map((s) => +s);
+    let parameters = parametersAttr
+      ?.split(",")
+      .map((s) => (/[0-9+]/.test(s) ? +s : null));
     if (parameters?.length) {
       this.setOperatorParameters(parameters);
     }
@@ -135,7 +135,7 @@ export class ComModuleElement extends ComBaseElement {
       this.#deferedSignal = type;
       return this;
     }
-    if (!this.#chain.isConnectedToIntercom) {
+    if (!this.#chain?.isConnectedToIntercom) {
       this.#deferedSignal = type;
       return this;
     }
