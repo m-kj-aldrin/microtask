@@ -57,7 +57,7 @@ export class ComModuleElement extends ComBaseElement {
      * @param {T} type
      * @returns {ComModuleElement<OperatorElementTagNameMap[`com-op-${T}`]>}
      */
-    setOperatorType(type) {
+    setOperatorType(type, signal = false) {
         if (!this.isConnected) {
             // console.log("setOperatorType: DEFER");
             this.#type = type;
@@ -70,10 +70,18 @@ export class ComModuleElement extends ComBaseElement {
 
         // console.log("\tsetOperatorType: START");
 
+        if (this.#operator) {
+            signal && this.signal("remove");
+            this.#operator.remove();
+        }
+
         const operator = document.createElement(`com-op-${type}`);
         this.#operator = operator;
 
-        this.appendChild(operator);
+        // this.appendChild(operator);
+        this.shadowRoot.appendChild(operator);
+
+        signal && this.signal("insert");
 
         // console.log("\tsetOperatorType: END");
 
