@@ -11,12 +11,15 @@ comModuleTemplate.innerHTML = `
  * @extends ComBaseElement<"com-chain",null>
  */
 export class ComModuleElement extends ComBaseElement {
-    /**@type {OperatorSufix[]} */
-    #validOperatorTypes = ["pth", "lfo"];
+    /**@type {Set<OperatorSufix>} */
+    #validOperatorTypes = new Set(["pth", "pth"]);
 
-    /**@param {string} typeString */
+    /**
+     * @param {string} typeString
+     * @returns {OperatorSufix}
+     */
     #validType(typeString) {
-        return this.#validOperatorTypes.find((s) => s == typeString) ?? "pth";
+        return this.#validOperatorTypes.has(typeString) ? typeString : "pth";
     }
 
     constructor() {
@@ -55,13 +58,26 @@ export class ComModuleElement extends ComBaseElement {
     /**
      * @template {OperatorSufix} T
      * @param {T} type
+     * @param {object} [o]
+     * @param {boolean} [o.signal]
+     * @param {OperatorType['parameters']} [o.parameters]
      * @returns {ComModuleElement<OperatorElementTagNameMap[`com-op-${T}`]>}
      */
-    setOperatorType(type, signal = false) {
+    setOperatorType(type, { signal, parameters } = {}) {
         if (!this.isConnected) {
             // console.log("setOperatorType: DEFER");
             this.#type = type;
             this.#deferedType = true;
+            if (parameters) {
+                this.#deferedParameterValues = parameters;
+            } else {
+                this.#deferedParameterValues = [];
+            }
+            if (signal) {
+                this.#deferedSignal = "insert";
+            } else {
+                this.#deferedSignal = null;
+            }
             return this;
         }
 
@@ -81,6 +97,10 @@ export class ComModuleElement extends ComBaseElement {
         // this.appendChild(operator);
         this.shadowRoot.appendChild(operator);
 
+        if (parameters) {
+            this.#operator.parameters = parameters;
+        }
+
         signal && this.signal("insert");
 
         // console.log("\tsetOperatorType: END");
@@ -91,8 +111,15 @@ export class ComModuleElement extends ComBaseElement {
     /**@type {number[]} */
     #deferedParameterValues = [];
 
-    /**@param {OperatorType['parameters']} values */
-    setOperatorParameters(values, signalParameters = false) {
+    /**
+     * @param {OperatorType['parameters']} values
+     * @param {object} [o]
+     * @param {boolean} [o.signalParameters]
+     */
+    setOperatorParameters(
+        values,
+        { signalParameters = false } = { signalParameters: false }
+    ) {
         if (!this.#operator) {
             this.#deferedParameterValues = values;
             return this;

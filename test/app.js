@@ -73,17 +73,21 @@ const chain0 = document.createElement("com-chain").signal("new");
 
 const module00 = document
     .createElement("com-module")
-    .setOperatorType("lfo")
-    .signal("insert");
+    .setOperatorType("lfo", { signal: true, parameters: [0, 0, 1000] });
 
-const module01 = document.createElement("com-module").signal("insert");
+// .signal("insert");
+
+// const module01 = document.createElement("com-module").signal("insert");
 
 document.body.appendChild(network);
 network.appendChild(chain0);
-chain0.append(module00, module01);
+chain0.append(module00);
 
 setTimeout(() => {
-    module01
-        .setOperatorType("lfo", true)
-        .setOperatorParameters([0.1, 0.2, 0.3],true);
-}, 1000);
+    module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });
+    setTimeout(() => {
+        module00.setOperatorParameters([500, 400, 300], {
+            signalParameters: true,
+        });
+    }, 100);
+}, 100);
