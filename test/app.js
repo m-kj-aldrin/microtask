@@ -67,27 +67,37 @@
 
 ////// -----
 
-const network = document.createElement("com-network");
+// const network = document.createElement("com-network");
 
-const chain0 = document.createElement("com-chain").signal("new");
+// const chain0 = document.createElement("com-chain").signal("new");
 
-const module00 = document
-    .createElement("com-module")
-    .setOperatorType("lfo", { signal: true, parameters: [0, 0, 1000] });
+// const module00 = document
+//     .createElement("com-module")
+//     .setOperatorType("lfo", { signal: true, parameters: [, , 1000] });
 
 // .signal("insert");
 
 // const module01 = document.createElement("com-module").signal("insert");
 
-document.body.appendChild(network);
-network.appendChild(chain0);
-chain0.append(module00);
+// document.body.appendChild(network);
+// network.appendChild(chain0);
+// chain0.append(module00);
+
+// setTimeout(() => {
+//     module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });
+//     setTimeout(() => {
+//         module00.setOperatorParameters([500, 400, 300], {
+//             signalParameters: true,
+//         });
+//     }, 100);
+// }, 100);
+
+const lfo = document.createElement("com-op-lfo");
+
+document.body.appendChild(lfo);
+
+lfo.setParameterValue(1000, 0);
 
 setTimeout(() => {
-    module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });
-    setTimeout(() => {
-        module00.setOperatorParameters([500, 400, 300], {
-            signalParameters: true,
-        });
-    }, 100);
+   lfo.signalParameterByIndex(0) 
 }, 100);

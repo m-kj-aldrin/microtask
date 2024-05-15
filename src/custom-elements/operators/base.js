@@ -1,4 +1,5 @@
 import { InputBaseElement } from "../inputs/base.js";
+import { InputNumberElement } from "../inputs/number.js";
 
 const operatorBaseTemplate = document.createElement("template");
 operatorBaseTemplate.innerHTML = `
@@ -36,6 +37,7 @@ export class OperatorBaseElement extends HTMLElement {
     }
 
     set parameters(values) {
+        console.log(values);
         this.querySelectorAll("input-number").forEach((inp, i) => {
             let index = inp.hasAttribute("order")
                 ? +inp.getAttribute("order")
@@ -45,6 +47,33 @@ export class OperatorBaseElement extends HTMLElement {
                 inp.value = newValue;
             }
         });
+    }
+
+    /**@returns {InputNumberElement} */
+    getParameterByIndex(index = 0) {
+        return this.querySelector(`:where(input-number)[order="${index}"]`);
+    }
+
+    /**
+     * @param {number} value
+     * @param {number} index
+     * @param {object} o
+     * @param {boolean} [o.signal]
+     */
+    setParameterValue(value, index, { signal = false } = {}) {
+        console.log(signal);
+        let parameter = this.getParameterByIndex(index);
+        if (!parameter) {
+            return this;
+        }
+        parameter.value = value;
+        signal && this.#signalParameter(parameter);
+        return this;
+    }
+
+    /**@param {number} index */
+    signalParameterByIndex(index) {
+        this.#signalParameter(this.getParameterByIndex(index));
     }
 
     /**@param {InputBaseElement} parameterElement */
