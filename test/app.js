@@ -81,6 +81,7 @@ document.body.appendChild(network);
 network.appendChild(chain0);
 chain0.append(module00);
 
+module00.operator.setParameterValue(10001, 1, { signal: true });
 // setTimeout(() => {
 //     module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });
 //     setTimeout(() => {

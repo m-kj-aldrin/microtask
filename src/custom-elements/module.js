@@ -64,6 +64,10 @@ export class ComModuleElement extends ComBaseElement {
     /**@type {OperatorTypes} */
     #operator = null;
 
+    get operator() {
+        return this.#operator;
+    }
+
     /**
      * @template {OperatorSufix} T
      * @param {T} type
