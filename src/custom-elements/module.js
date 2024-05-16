@@ -3,7 +3,9 @@ import { ComChainElement } from "./chain.js";
 
 const comModuleTemplate = document.createElement("template");
 comModuleTemplate.innerHTML = `
-<slot></slot>
+<div id="outs">
+    <slot></slot>
+</div>
 `;
 
 /**
@@ -167,6 +169,10 @@ export class ComModuleElement extends ComBaseElement {
     }
 
     #connectedToIntercom = false;
+
+    get isConnectedToIntercom() {
+        return this.#connectedToIntercom;
+    }
 
     /**@param {"insert" | "append" | "remove"} type */
     signal(type) {

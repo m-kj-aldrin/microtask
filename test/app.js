@@ -75,13 +75,14 @@ const module00 = document
     .createElement("com-module")
     .setOperatorType("lfo", { signal: true, parameters: [123123, , 1000] });
 
-const module01 = document.createElement("com-module").signal("insert");
+const out00 = document.createElement("com-out");
+
+module00.appendChild(out00);
 
 document.body.appendChild(network);
 network.appendChild(chain0);
 chain0.append(module00);
 
-module00.operator.setParameterValue(10001, 1, { signal: true });
 // setTimeout(() => {
 //     module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });
 //     setTimeout(() => {
@@ -94,6 +95,9 @@ module00.operator.setParameterValue(10001, 1, { signal: true });
 // const lfo = document.createElement("com-op-lfo");
 
 // document.body.appendChild(lfo);
+
+// lfo.parameters = [12];
+// console.log(lfo.parameters);
 
 // lfo.setParameterValue(1000, 0, { signal: true });
 

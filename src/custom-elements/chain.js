@@ -2,6 +2,9 @@ import { ComBaseElement } from "./base.js";
 
 const comChainTemplate = document.createElement("template");
 comChainTemplate.innerHTML = `
+<div id="header">
+    <button data-action="remove">del</button>
+</div>
 <slot></slot>
 `;
 
@@ -17,7 +20,25 @@ export class ComChainElement extends ComBaseElement {
             this.signal("new");
         }
 
+        this.#setupListeners();
+
         // console.log("chain constructing: END");
+    }
+
+    remove(signal = false) {
+        signal && this.signal("remove");
+        return super.remove();
+    }
+
+    #setupListeners() {
+        this.shadowRoot.addEventListener("pointerdown", (e) => {
+            const action = e.target.getAttribute("data-action");
+            switch (action) {
+                case "remove":
+                    this.remove(true);
+                    break;
+            }
+        });
     }
 
     #connectedToIntercom = false;

@@ -4,6 +4,7 @@ import { ComModuleElement } from "./custom-elements/module";
 import { ComNetworkElement } from "./custom-elements/network";
 import { LfoOperatorElement } from "./custom-elements/operators/lfo";
 import { PthOperatorElement } from "./custom-elements/operators/pth";
+import { ComOutElement } from "./custom-elements/out";
 
 type RemoveBase<T extends `com-op-${string}`> = T extends `com-op-${infer U}`
     ? U
@@ -31,6 +32,7 @@ declare global {
         "com-network": ComNetworkElement;
         "com-chain": ComChainElement;
         "com-module": ComModuleElement<PthOperatorElement>;
+        "com-out": ComOutElement;
     }
 
     interface InputElementTagNameMap {
@@ -85,6 +87,12 @@ declare global {
     //       selector: `com-module:nth-child(${string})`
     //     ): ComModuleElement<AllModuleTypes> | null;
     //   }
+
+    interface PointerEvent {
+        target: HTMLElement;
+    }
+
+    interface ShadowRootEventMap extends HTMLElementEventMap {}
 }
 
 export {};
