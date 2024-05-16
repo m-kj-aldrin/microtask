@@ -31,14 +31,13 @@ export class OperatorBaseElement extends HTMLElement {
     }
 
     get parameters() {
-        return [...this.querySelectorAll("input-number")].map(
+        return [...this.shadowRoot.querySelectorAll("input-number")].map(
             (inp) => inp.value
         );
     }
 
     set parameters(values) {
-        console.log(values);
-        this.querySelectorAll("input-number").forEach((inp, i) => {
+        this.shadowRoot.querySelectorAll("input-number").forEach((inp, i) => {
             let index = inp.hasAttribute("order")
                 ? +inp.getAttribute("order")
                 : i;
@@ -51,7 +50,9 @@ export class OperatorBaseElement extends HTMLElement {
 
     /**@returns {InputNumberElement} */
     getParameterByIndex(index = 0) {
-        return this.querySelector(`:where(input-number)[order="${index}"]`);
+        return this.shadowRoot.querySelector(
+            `:where(input-number)[order="${index}"]`
+        );
     }
 
     /**
@@ -61,7 +62,6 @@ export class OperatorBaseElement extends HTMLElement {
      * @param {boolean} [o.signal]
      */
     setParameterValue(value, index, { signal = false } = {}) {
-        console.log(signal);
         let parameter = this.getParameterByIndex(index);
         if (!parameter) {
             return this;
@@ -73,11 +73,13 @@ export class OperatorBaseElement extends HTMLElement {
 
     /**@param {number} index */
     signalParameterByIndex(index) {
+        if (!this.parent?.isConnected) return;
         this.#signalParameter(this.getParameterByIndex(index));
     }
 
     /**@param {InputBaseElement} parameterElement */
     #signalParameter(parameterElement) {
+        if (!this.parent?.isConnected) return;
         let index = parameterElement.getAttribute("order");
         let value = parameterElement.value;
         let signalString = `parameter -c ${0}:${0} -v ${index}:${value}`;
@@ -86,9 +88,17 @@ export class OperatorBaseElement extends HTMLElement {
     }
 
     signalAll() {
-        this.querySelectorAll("input-number").forEach((inp) => {
+        if (!this.parent?.isConnected) return;
+        this.shadowRoot.querySelectorAll("input-number").forEach((inp) => {
             this.#signalParameter(inp);
         });
+    }
+
+    get parent() {
+        const host = this.getRootNode().host;
+        if (host instanceof HTMLElement) {
+            return host.closest("com-module");
+        }
     }
 
     connectedCallback() {}

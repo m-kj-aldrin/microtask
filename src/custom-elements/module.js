@@ -8,7 +8,6 @@ comModuleTemplate.innerHTML = `
 
 /**
  * @template {OperatorTypes} OperatorType
- * @extends ComBaseElement<"com-chain",null>
  */
 export class ComModuleElement extends ComBaseElement {
     /**@type {Set<OperatorSufix>} */
@@ -23,7 +22,7 @@ export class ComModuleElement extends ComBaseElement {
     }
 
     constructor() {
-        super("com-chain", null);
+        super();
 
         // console.log("module constructing: START");
 
@@ -45,6 +44,16 @@ export class ComModuleElement extends ComBaseElement {
         }
 
         // console.log("module constructing: END");
+    }
+
+    get parent() {
+        return this.closest("com-chain");
+    }
+    get index() {
+        return ComBaseElement.indexOf(
+            this.parent.querySelectorAll("com-module"),
+            this
+        );
     }
 
     #deferedType = false;

@@ -5,12 +5,9 @@ comChainTemplate.innerHTML = `
 <slot></slot>
 `;
 
-/**
- * @extends ComBaseElement<"com-network","com-module">
- */
 export class ComChainElement extends ComBaseElement {
     constructor() {
-        super("com-network", "com-module");
+        super();
 
         // console.log("chain constructing: START");
 
@@ -26,6 +23,16 @@ export class ComChainElement extends ComBaseElement {
     #connectedToIntercom = false;
     get isConnectedToIntercom() {
         return this.#connectedToIntercom;
+    }
+
+    get parent() {
+        return this.closest("com-network");
+    }
+    get index() {
+        return ComBaseElement.indexOf(
+            this.parent.querySelectorAll("com-chain"),
+            this
+        );
     }
 
     /**@type {"new" | "edit" | "remove"} */

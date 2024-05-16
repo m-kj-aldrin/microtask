@@ -5,12 +5,9 @@ comNetworkTemplate.innerHTML = `
 <slot></slot>
 `;
 
-/**
- * @extends ComBaseElement<null,"com-chain">
- */
 export class ComNetworkElement extends ComBaseElement {
     constructor() {
-        super(null, "com-chain");
+        super();
 
         // console.log("network constructing: START");
 
@@ -19,6 +16,14 @@ export class ComNetworkElement extends ComBaseElement {
         // console.log("network constructing: END");
     }
 
-    connectedCallback() {}
+    connectedCallback() {
+        const currentNetwork = document.querySelector("com-network");
+        if (currentNetwork != this) {
+            console.error(
+                "only one network element can be present in the document"
+            );
+            this.remove();
+        }
+    }
     disconnectedCallback() {}
 }
