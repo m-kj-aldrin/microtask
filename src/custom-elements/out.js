@@ -180,10 +180,10 @@ export class ComOutElement extends ComBaseElement {
                 let cidx = this.parent.parent.index;
                 let midx = this.parent.index;
 
-                let cvPid = PID_ENUM[this.#cv_pid] ?? "_";
-                let cvCh = this.#cv_ch ?? "_";
-                let gtPid = PID_ENUM[this.#gt_pid] ?? "_";
-                let gtCh = this.#gt_ch ?? "_";
+                let cvPid = PID_ENUM[this.#cv_pid] || "_";
+                let cvCh = this.#cv_ch || "_";
+                let gtPid = PID_ENUM[this.#gt_pid] || "_";
+                let gtCh = this.#gt_ch || "_";
 
                 signalString = `out -n ${cidx}:${midx}:${cvPid}:${cvCh}:${gtPid}:${gtCh}`;
 
