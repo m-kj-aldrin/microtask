@@ -1,17 +1,44 @@
 // const network = document.createElement("com-network");
 
+document.body.innerHTML = `
+<com-network>
+    <com-chain signal>
+        <com-module signal type="lfo" parameters=",,0.1">
+            <com-out signal cv-pid="din" cv-ch="4" gt-pid="MIDI_1" gt-ch="14"></com-out>
+            <com-out></com-out>
+        </com-module>
+    </com-chain>
+</com-network>
+`;
+
+document.querySelector("com-chain:nth-child(1) com-module:nth-child(1)");
+//  .remove(true);
+
 // document.body.innerHTML = `
 // <com-network>
-//     <com-chain signal>
-//         <com-module signal type="lfo" parameters=",,0.1"></com-module>
-//         <com-module signal type="lfo" parameters="100,200,300"></com-module>
-//         <com-module signal type="pth"></com-module>
-//     </com-chain>
-//     <com-chain signal>
-//         <com-module signal type="lfo" parameters="999,999,999"></com-module>
-//         <com-module signal type="lfo" parameters="100,200,300"></com-module>
-//         <com-module signal type="pth"></com-module>
-//     </com-chain>
+//    <com-chain signal>
+//       <com-module type="lfo" signal parameters="1,2,3">
+//          <com-out></com-out>
+//       </com-module>
+//    </com-chain>
+//    <com-chain signal>
+//       <com-module type="lfo" signal parameters="1,2,3">
+//       </com-module>
+//       <com-module type="lfo" signal parameters="1,2,3">
+//       </com-module>
+//       <com-module type="lfo" signal parameters="1,2,3">
+//          <com-out></com-out>
+//       </com-module>
+//    </com-chain>
+//    <com-chain signal>
+//       <com-module type="lfo" signal parameters="1,2,3">
+//          <com-out></com-out>
+//       </com-module>
+//       <com-module type="lfo" signal parameters="1,2,3"></com-module>
+//       <com-module type="lfo" signal parameters="1,2,3"></com-module>
+//       <com-module type="lfo" signal parameters="1,2,3"></com-module>
+//       <com-module type="lfo" signal parameters="1,2,3"></com-module>
+//    </com-chain>
 // </com-network>
 // `;
 
@@ -67,21 +94,21 @@
 
 ////// -----
 
-const network = document.createElement("com-network");
+// const network = document.createElement("com-network");
 
-const chain0 = document.createElement("com-chain").signal("new");
+// const chain0 = document.createElement("com-chain").signal("new");
 
-const module00 = document
-    .createElement("com-module")
-    .setOperatorType("lfo", { signal: true, parameters: [123123, , 1000] });
+// const module00 = document
+//     .createElement("com-module")
+//     .setOperatorType("lfo", { signal: true, parameters: [123123, , 1000] });
 
-const out00 = document.createElement("com-out");
+// const out00 = document.createElement("com-out");
 
-module00.appendChild(out00);
+// module00.appendChild(out00);
 
-document.body.appendChild(network);
-network.appendChild(chain0);
-chain0.append(module00);
+// document.body.appendChild(network);
+// network.appendChild(chain0);
+// chain0.append(module00);
 
 // setTimeout(() => {
 //     module00.setOperatorType("lfo", { signal: true, parameters: [1, 2, 3] });

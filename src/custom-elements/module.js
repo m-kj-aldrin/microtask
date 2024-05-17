@@ -13,7 +13,7 @@ comModuleTemplate.innerHTML = `
  */
 export class ComModuleElement extends ComBaseElement {
     /**@type {Set<OperatorSufix>} */
-    #validOperatorTypes = new Set(["pth", "pth"]);
+    #validOperatorTypes = new Set(["pth", "lfo"]);
 
     /**
      * @param {string} typeString
@@ -68,6 +68,11 @@ export class ComModuleElement extends ComBaseElement {
 
     get operator() {
         return this.#operator;
+    }
+
+    remove(signal = false) {
+        signal && this.signal("remove");
+        return super.remove();
     }
 
     /**
@@ -245,5 +250,7 @@ export class ComModuleElement extends ComBaseElement {
 
         // console.log("module connected: END");
     }
-    disconnectedCallback() {}
+    disconnectedCallback() {
+        
+    }
 }

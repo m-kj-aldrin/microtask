@@ -24,7 +24,7 @@ export class OperatorBaseElement extends HTMLElement {
     }
 
     #setupListeners() {
-        this.addEventListener("input", (e) => {
+        this.shadowRoot.addEventListener("input", (e) => {
             if (!(e.target instanceof InputBaseElement)) return;
             this.#signalParameter(e.target);
         });

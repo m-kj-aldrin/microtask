@@ -50,10 +50,20 @@ export class ComChainElement extends ComBaseElement {
         return this.closest("com-network");
     }
     get index() {
+        if (!this.parent) {
+            return this;
+        }
         return ComBaseElement.indexOf(
             this.parent.querySelectorAll("com-chain"),
             this
         );
+    }
+
+    get isConnected() {
+        if (this.parent) {
+            return super.isConnected && this.parent.isConnected;
+        }
+        return false;
     }
 
     /**@type {"new" | "edit" | "remove"} */
@@ -68,8 +78,6 @@ export class ComChainElement extends ComBaseElement {
 
         let signalString = "";
 
-        let cidx = this.index;
-
         switch (type) {
             case "new":
                 if (this.#connectedToIntercom) return this;
@@ -79,12 +87,12 @@ export class ComChainElement extends ComBaseElement {
                 break;
             case "edit":
                 if (!this.#connectedToIntercom) return this;
-                signalString = `chain -e ${cidx}`;
+                signalString = `chain -e ${this.index}`;
                 break;
             case "remove":
                 if (!this.#connectedToIntercom) return this;
 
-                signalString = `chain -r ${cidx}`;
+                signalString = `chain -r ${this.index}`;
                 this.#connectedToIntercom = false;
                 break;
             default:
